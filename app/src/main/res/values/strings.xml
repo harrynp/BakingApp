@@ -6,8 +6,6 @@
     <!-- Error messages -->
     <string name="results_error_message">Failed to get results, please try again.</string>
     <string name="title_activity_detail">DetailActivity</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
-    <string name="tab_text_3">Tab 3</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="tab_text_ingredients">Ingredients</string>
+    <string name="tab_text_steps">Steps</string>
 </resources>

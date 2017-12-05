@@ -21,14 +21,13 @@ import com.github.harrynp.tasty.data.pojo.Step;
 import com.github.harrynp.tasty.databinding.GridItemRecipeBinding;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by harry on 12/2/2017.
  */
 
-public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdapterVieHolder> {
+public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdapterViewHolder> {
 
     private final Context mContext;
     private final RecipeAdapterOnClickHandler mClickHandler;
@@ -54,13 +53,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
     }
 
     @Override
-    public RecipeAdapterVieHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecipeAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.grid_item_recipe, parent, false);
-        return new RecipeAdapterVieHolder(mBinding.getRoot());
+        return new RecipeAdapterViewHolder(mBinding.getRoot());
     }
 
     @Override
-    public void onBindViewHolder(RecipeAdapterVieHolder holder, int position) {
+    public void onBindViewHolder(RecipeAdapterViewHolder holder, int position) {
         Recipe recipe = mRecipeList.get(position);
         if (recipe != null){
             ArrayList<Step> steps = recipe.getSteps();
@@ -85,12 +84,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
         void onClick(Recipe recipe);
     }
 
-    public class RecipeAdapterVieHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class RecipeAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         final ImageView thumbnailView;
         final TextView titleView;
         final TextView servingsView;
 
-        public RecipeAdapterVieHolder(View itemView) {
+        public RecipeAdapterViewHolder(View itemView) {
             super(itemView);
             thumbnailView = mBinding.ivRecipeThumbnail;
             titleView = mBinding.tvTitle;

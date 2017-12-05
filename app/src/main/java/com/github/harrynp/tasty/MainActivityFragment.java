@@ -18,7 +18,6 @@ import com.github.harrynp.tasty.adapters.RecipeAdapter;
 import com.github.harrynp.tasty.data.database.RecipeDatabaseHelper;
 import com.github.harrynp.tasty.data.pojo.Recipe;
 import com.github.harrynp.tasty.databinding.FragmentMainBinding;
-import com.github.harrynp.tasty.network.RecipeApi;
 import com.github.harrynp.tasty.network.RecipeApiClient;
 import com.github.harrynp.tasty.network.RecipeApiListener;
 import com.github.harrynp.tasty.utils.GridAutofitLayoutManager;
@@ -49,19 +48,18 @@ public class MainActivityFragment extends Fragment implements RecipeAdapter.Reci
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
         recipeAdapter = new RecipeAdapter(getContext(), this);
         recipeDatabaseHelper = new RecipeDatabaseHelper(getContext());
         recipeApiClient = new RecipeApiClient();
         recipes = new ArrayList<>();
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
         mBinding.swiperefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh() {
                 updateRecipes();
             }
         });
-        GridAutofitLayoutManager layoutManager = new GridAutofitLayoutManager(getContext(), 700);
-//        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        GridAutofitLayoutManager layoutManager = new GridAutofitLayoutManager(getContext(), 1000);
         mBinding.rvRecipes.setLayoutManager(layoutManager);
         mBinding.rvRecipes.setAdapter(recipeAdapter);
         if (savedInstanceState != null){
@@ -78,6 +76,7 @@ public class MainActivityFragment extends Fragment implements RecipeAdapter.Reci
                 mBinding.rvRecipes.getLayoutManager().scrollToPosition(position);
             }
         } else {
+            mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
             recipeDatabaseHelper.getAllRecipes(this);
         }
         return mBinding.getRoot();
@@ -117,9 +116,11 @@ public class MainActivityFragment extends Fragment implements RecipeAdapter.Reci
 
     private void updateRecipes(){
         if (isOnline()) {
+            mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
             recipeApiClient.getRecipes(this);
         } else {
             mBinding.swiperefresh.setRefreshing(false);
+            mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
             showErrorMessage();
         }
     }
@@ -127,12 +128,13 @@ public class MainActivityFragment extends Fragment implements RecipeAdapter.Reci
     @Override
     public void onClick(Recipe recipe) {
         Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
-        detailIntent.putExtra("RECIPE_DETAILS", Parcels.wrap(recipe));
+        detailIntent.putExtra(DetailActivity.RECIPE_DETAILS, Parcels.wrap(recipe));
         startActivity(detailIntent);
     }
 
     @Override
     public void onSuccess(ArrayList result) {
+        mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
         mBinding.swiperefresh.setRefreshing(false);
         recipes.clear();
         recipeAdapter.clear();
@@ -167,6 +169,7 @@ public class MainActivityFragment extends Fragment implements RecipeAdapter.Reci
 
     @Override
     public void onFailure(Throwable throwable) {
+        mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
         mBinding.swiperefresh.setRefreshing(false);
         showErrorMessage();
     }
@@ -188,6 +191,7 @@ public class MainActivityFragment extends Fragment implements RecipeAdapter.Reci
             for (Recipe recipe : recipes) {
                 recipeAdapter.addRecipe(recipe);
             }
+            mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
             mBinding.swiperefresh.setRefreshing(false);
             showGridView();
         }

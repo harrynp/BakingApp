@@ -16,7 +16,9 @@ import android.view.ViewGroup;
 
 import com.github.harrynp.tasty.adapters.RecipeAdapter;
 import com.github.harrynp.tasty.data.database.RecipeDatabaseHelper;
+import com.github.harrynp.tasty.data.pojo.Ingredient;
 import com.github.harrynp.tasty.data.pojo.Recipe;
+import com.github.harrynp.tasty.data.pojo.Step;
 import com.github.harrynp.tasty.databinding.FragmentMainBinding;
 import com.github.harrynp.tasty.network.RecipeApiClient;
 import com.github.harrynp.tasty.network.RecipeApiListener;
@@ -128,7 +130,16 @@ public class MainActivityFragment extends Fragment implements RecipeAdapter.Reci
     @Override
     public void onClick(Recipe recipe) {
         Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
-        detailIntent.putExtra(DetailActivity.RECIPE_DETAILS, Parcels.wrap(recipe));
+        ArrayList<Parcelable> ingredients = new ArrayList<>();
+        for (Ingredient ingredient : recipe.getIngredients()){
+            ingredients.add(Parcels.wrap(ingredient));
+        }
+        ArrayList<Parcelable> steps = new ArrayList<>();
+        for (Step step : recipe.getSteps()){
+            steps.add(Parcels.wrap(step));
+        }
+        detailIntent.putExtra(IngredientsFragment.INGREDIENTS_EXTRA, ingredients);
+        detailIntent.putExtra(StepsFragment.STEPS_EXTRA, steps);
         startActivity(detailIntent);
     }
 

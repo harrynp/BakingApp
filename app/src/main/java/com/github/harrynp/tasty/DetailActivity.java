@@ -2,6 +2,7 @@ package com.github.harrynp.tasty;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,15 +22,20 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.github.harrynp.tasty.data.pojo.Ingredient;
 import com.github.harrynp.tasty.data.pojo.Recipe;
+import com.github.harrynp.tasty.data.pojo.Step;
 import com.github.harrynp.tasty.databinding.ActivityDetailBinding;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DetailActivity extends AppCompatActivity {
     ActivityDetailBinding mBinding;
-    public static final String RECIPE_DETAILS = "RECIPE_DETAILS";
-    private Recipe recipe;
+    private ArrayList<Ingredient> ingredients;
+    private ArrayList<Step> steps;
 
 
     /**
@@ -68,8 +74,20 @@ public class DetailActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
         Intent detailIntent = getIntent();
-        if (detailIntent != null && detailIntent.hasExtra(RECIPE_DETAILS)){
-            recipe = Parcels.unwrap(detailIntent.getParcelableExtra(RECIPE_DETAILS));
+        if (detailIntent != null){
+            if (detailIntent.hasExtra(IngredientsFragment.INGREDIENTS_EXTRA)){
+                ingredients = new ArrayList<>();
+                ArrayList<Parcelable> parcelables = detailIntent.getParcelableArrayListExtra(IngredientsFragment.INGREDIENTS_EXTRA);
+                for (Parcelable parcelable : parcelables) {
+                    ingredients.add((Ingredient) Parcels.unwrap(parcelable));
+                }
+            }
+            if (detailIntent.hasExtra(StepsFragment.STEPS_EXTRA)){
+                steps = new ArrayList<>();
+                for (Parcelable parcelable : detailIntent.getParcelableArrayListExtra(StepsFragment.STEPS_EXTRA)) {
+                    steps.add((Step) Parcels.unwrap(parcelable));
+                }
+            }
         }
     }
 
@@ -110,9 +128,9 @@ public class DetailActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             if (position == 0) {
-                return IngredientsFragment.newInstance(recipe.getIngredients());
+                return IngredientsFragment.newInstance(ingredients);
             } else {
-                return IngredientsFragment.newInstance(recipe.getIngredients());
+                return StepsFragment.newInstance(steps);
             }
         }
 

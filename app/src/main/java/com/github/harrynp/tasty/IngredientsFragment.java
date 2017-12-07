@@ -27,7 +27,6 @@ public class IngredientsFragment extends Fragment {
 
     private FragmentIngredientBinding mBinding;
     private IngredientsAdapter ingredientsAdapter;
-    private ArrayList<Ingredient> ingredients;
     public static String INGREDIENTS_EXTRA = "INGREDIENTS_EXTRA";
     private static String SCROLLBAR_POSITION_KEY = "SCROLLBAR_POSITION_KEY";
 
@@ -52,13 +51,11 @@ public class IngredientsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_ingredient, container, false);
         ingredientsAdapter = new IngredientsAdapter(getContext());
-        ingredients = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mBinding.rvIngredients.setLayoutManager(layoutManager);
         mBinding.rvIngredients.setAdapter(ingredientsAdapter);
         for (Parcelable parcelable : getArguments().getParcelableArrayList(INGREDIENTS_EXTRA)){
             Ingredient ingredient = Parcels.unwrap(parcelable);
-            ingredients.add(ingredient);
             ingredientsAdapter.addIngredient(ingredient);
         }
         if (savedInstanceState != null){

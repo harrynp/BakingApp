@@ -22,6 +22,8 @@
             app:layout_constraintHorizontal_weight="0.7"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:textSize="16sp"
+            android:textColor="@color/secondary_text"
             tools:text="Graham Cracker crumbs" />
 
         <TextView
@@ -37,6 +39,8 @@
             app:layout_constraintHorizontal_weight="0.3"
             app:layout_constraintStart_toEndOf="@+id/tv_ingredient"
             app:layout_constraintTop_toTopOf="parent"
+            android:textColor="@color/secondary_text"
+            android:textSize="16sp"
             tools:text="2 CUP" />
 
     </android.support.constraint.ConstraintLayout>

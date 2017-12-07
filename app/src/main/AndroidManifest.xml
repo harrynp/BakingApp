@@ -31,10 +31,21 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.github.harrynp.tasty.MainActivity" />
         </activity>
+
         <provider
-            android:authorities="@string/content_authority"
             android:name=".data.database.RecipesProvider"
-            android:exported="false"/>
+            android:authorities="@string/content_authority"
+            android:exported="false" />
+
+        <activity
+            android:name=".StepDetailActivity"
+            android:label="@string/title_activity_step_detail"
+            android:parentActivityName=".DetailActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.github.harrynp.tasty.DetailActivity" />
+        </activity>
     </application>
 
 </manifest>

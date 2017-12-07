@@ -10,7 +10,8 @@
         android:foreground="?android:selectableItemBackground"
         app:cardCornerRadius="8dp"
         app:cardElevation="12dp"
-        android:layout_margin="8dp">
+        android:layout_margin="8dp"
+        android:focusable="true">
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -51,17 +52,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="4dp"
                 app:layout_constraintBottom_toBottomOf="@+id/v_footer"
                 app:layout_constraintStart_toStartOf="@+id/tv_title"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title"
-                app:srcCompat="@drawable/ic_person" />
+                app:srcCompat="@drawable/ic_person_black_24dp" />
 
             <TextView
                 android:id="@+id/tv_serving"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@+id/iv_serving"

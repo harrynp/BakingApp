@@ -1,5 +1,7 @@
 package com.github.harrynp.tasty.data.pojo;
 
+import android.arch.persistence.room.Ignore;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -26,6 +28,9 @@ public class Step {
     @SerializedName("thumbnailURL")
     @Expose
     String thumbnailURL;
+    @SerializedName("stepView")
+    @Expose
+    boolean stepViewed;
 
     public Step(){
     }
@@ -38,6 +43,7 @@ public class Step {
         this.description = description;
         this.videoURL = videoURL;
         this.thumbnailURL = thumbnailURL;
+        this.stepViewed = false;
     }
 
 
@@ -79,5 +85,13 @@ public class Step {
 
     public void setThumbnailURL(String thumbnailURL) {
         this.thumbnailURL = thumbnailURL;
+    }
+
+    public boolean getStepViewed(){
+        return stepViewed;
+    }
+
+    public void setStepViewed(boolean stepViewed){
+        this.stepViewed = stepViewed;
     }
 }

@@ -68,7 +68,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
             Glide.with(mContext)
                     .load(steps.get(steps.size() -1).getVideoURL())
                     .apply(new RequestOptions()
-                    .fallback(R.drawable.image_not_found))
+                    .fallback(R.drawable.ic_spoon_fork)
+                    .centerInside())
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(holder.thumbnailView);
         }

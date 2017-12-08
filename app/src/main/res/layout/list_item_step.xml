@@ -3,47 +3,48 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/cl_step"
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_step"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:foreground="?android:selectableItemBackground"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="12dp"
+        android:layout_margin="8dp"
         android:focusable="true">
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/iv_step_thumbnail"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:scaleType="centerCrop"
+                android:background="#e7e7e7"/>
 
 
-        <ImageView
-            android:id="@+id/step_dot"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            app:layout_constraintBottom_toTopOf="@id/bottom_connector"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.24000001"
-            app:srcCompat="@drawable/ic_hollow_circle" />
+            <TextView
+                android:id="@+id/tv_step_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:maxLines="1"
+                android:paddingLeft="8dp"
+                android:paddingBottom="8dp"
+                android:textSize="20sp"
+                android:textColor="@color/icons"
+                android:shadowColor="#000000"
+                android:shadowDx="1.5"
+                android:shadowDy="1.3"
+                android:shadowRadius="1.6"
+                app:layout_constraintStart_toStartOf="@+id/iv_step_thumbnail"
+                app:layout_constraintBottom_toBottomOf= "@id/iv_step_thumbnail"
+                tools:text="Test Recipe"
+                android:layout_marginLeft="8dp" />
 
-        <TextView
-            android:id="@+id/tv_step"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:textColor="@color/primary_text"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@id/step_dot"
-            app:layout_constraintLeft_toRightOf="@id/step_dot"
-            app:layout_constraintTop_toTopOf="@id/step_dot"
-            tools:text='Recipe Introduction' />
-
-        <View
-            android:id="@+id/bottom_connector"
-            android:layout_width="2dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="9dp"
-            android:background="@color/colorPrimary"
-            android:visibility="visible"
-            app:layout_constraintStart_toStartOf="@+id/step_dot"
-            app:layout_constraintTop_toBottomOf="@id/step_dot"
-            android:minHeight="32dp"/>
-
-    </android.support.constraint.ConstraintLayout>
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
 </layout>

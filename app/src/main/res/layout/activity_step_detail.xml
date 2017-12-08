@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.github.harrynp.tasty.StepDetailActivity">
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.github.harrynp.tasty.StepDetailActivity">
+        android:layout_height="match_parent">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -19,9 +19,42 @@
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        </android.support.design.widget.AppBarLayout>
+            </android.support.design.widget.AppBarLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <include layout="@layout/content_step_detail" />
 
-    </android.support.design.widget.CoordinatorLayout>
+                <!--<include layout="@layout/content_step_detail" />-->
+
+                <FrameLayout
+                    android:id="@+id/step_fragment_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+
+                <!--<TextView-->
+                <!--android:id="@+id/previous_step"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="60dp"-->
+                <!--android:layout_marginStart="8dp"-->
+                <!--android:maxLines="1"-->
+                <!--app:layout_constraintEnd_toStartOf="@id/next_step"-->
+                <!--app:layout_constraintHorizontal_weight=".5"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@id/step_fragment_container"-->
+                <!--tools:text="Starting prep" />-->
+
+                <!--<TextView-->
+                <!--android:id="@+id/next_step"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="60dp"-->
+                <!--android:maxLines="1"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintHorizontal_weight=".5"-->
+                <!--app:layout_constraintStart_toEndOf="@id/previous_step"-->
+                <!--app:layout_constraintTop_toTopOf="@id/previous_step"-->
+                <!--tools:text="Prep the cookie crust." />-->
+            </LinearLayout>
+        </android.support.design.widget.CoordinatorLayout>
 </layout>

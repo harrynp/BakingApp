@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.github.harrynp.tasty.R;
 import com.github.harrynp.tasty.data.pojo.Step;
 import com.github.harrynp.tasty.databinding.ListItemStepBinding;
@@ -57,15 +60,31 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsAdapter
     public void onBindViewHolder(StepsAdapter.StepsAdapterViewHolder holder, int position) {
         Step step = mStepList.get(position);
         if (step != null){
-            if (position == mStepList.size() -1){
-                holder.bottomConnector.setVisibility(View.GONE);
-            }
-            if (!step.getStepViewed()){
-                holder.stepDot.setImageResource(R.drawable.ic_hollow_circle);
+            if (step.getVideoURL() != null && !step.getVideoURL().isEmpty()) {
+                Glide.with(mContext)
+                        .load(step.getVideoURL())
+                        .apply(new RequestOptions()
+                                .placeholder(R.drawable.placeholder_food)
+                                .fallback(R.drawable.placeholder_food)
+                        .centerCrop())
+                        .into(holder.stepThumbnailView);
+            } else if (step.getThumbnailURL() != null && !step.getVideoURL().isEmpty()) {
+                Glide.with(mContext)
+                        .load(step.getThumbnailURL())
+                        .apply(new RequestOptions()
+                                .placeholder(R.drawable.placeholder_food)
+                                .fallback(R.drawable.placeholder_food)
+                        .centerCrop())
+                        .into(holder.stepThumbnailView);
             } else {
-                holder.stepDot.setImageResource(R.drawable.ic_filled_circle);
+                Glide.with(mContext)
+                        .load(R.drawable.placeholder_food)
+                        .apply(new RequestOptions()
+                        .centerCrop())
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(holder.stepThumbnailView);
             }
-            holder.stepView.setText(step.getShortDescription());
+            holder.stepNameView.setText(step.getShortDescription());
         }
     }
 
@@ -82,16 +101,13 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsAdapter
 
     public class StepsAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        ImageView stepDot;
-        TextView stepView;
-        View bottomConnector;
-
+        ImageView stepThumbnailView;
+        TextView stepNameView;
 
         public StepsAdapterViewHolder(View itemView) {
             super(itemView);
-            stepDot = mBinding.stepDot;
-            stepView = mBinding.tvStep;
-            bottomConnector = mBinding.bottomConnector;
+            stepThumbnailView = mBinding.ivStepThumbnail;
+            stepNameView = mBinding.tvStepName;
             itemView.setOnClickListener(this);
         }
 

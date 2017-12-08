@@ -1,5 +1,6 @@
 package com.github.harrynp.tasty;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -29,6 +30,7 @@ import timber.log.Timber;
 public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapterOnClickHandler{
     private StepsAdapter stepsAdapter;
     private FragmentStepBinding mBinding;
+//    private ArrayList<Step> steps;
     public static String STEPS_EXTRA = "STEPS_EXTRA";
     private static String SCROLLBAR_POSITION_KEY = "SCROLLBAR_POSITION_KEY";
 
@@ -39,8 +41,8 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapter
         Bundle args = new Bundle();
         ArrayList<Parcelable> stepParcelableArrayList = new ArrayList<>();
         if (stepArrayList != null){
-            for (Step ingredient : stepArrayList){
-                stepParcelableArrayList.add(Parcels.wrap(ingredient));
+            for (Step step : stepArrayList){
+                stepParcelableArrayList.add(Parcels.wrap(step));
             }
         }
         args.putParcelableArrayList(STEPS_EXTRA, stepParcelableArrayList);
@@ -56,13 +58,15 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapter
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mBinding.rvSteps.setLayoutManager(layoutManager);
         mBinding.rvSteps.setAdapter(stepsAdapter);
+//        steps = new ArrayList<>();
         for (Parcelable parcelable : getArguments().getParcelableArrayList(STEPS_EXTRA)) {
             Step step = Parcels.unwrap(parcelable);
+//            steps.add(step);
             stepsAdapter.addStep(step);
         }
         if (savedInstanceState != null){
             if (savedInstanceState.containsKey(SCROLLBAR_POSITION_KEY)){
-                mBinding.rvSteps.smoothScrollToPosition(savedInstanceState.getInt(SCROLLBAR_POSITION_KEY));
+                mBinding.rvSteps.scrollToPosition(savedInstanceState.getInt(SCROLLBAR_POSITION_KEY));
             }
         }
         return mBinding.getRoot();
@@ -77,8 +81,10 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapter
 
     @Override
     public void onClick(Step step, int adapterPosition) {
+        Intent stepDetailIntent = new Intent(getActivity(), StepDetailActivity.class);
+        stepDetailIntent.putExtra(StepDetailFragment.STEP_EXTRA, Parcels.wrap(step));
         step.setStepViewed(true);
         stepsAdapter.setViewed(adapterPosition);
-        Timber.d(String.valueOf(step.getStepViewed()));
+        startActivity(stepDetailIntent);
     }
 }

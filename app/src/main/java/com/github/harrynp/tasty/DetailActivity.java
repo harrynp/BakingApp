@@ -3,6 +3,8 @@ package com.github.harrynp.tasty;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Parcelable;
+import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -36,6 +38,8 @@ public class DetailActivity extends AppCompatActivity {
     ActivityDetailBinding mBinding;
     private ArrayList<Ingredient> ingredients;
     private ArrayList<Step> steps;
+    private static final String INGREDIENTS_STATE = "INGREDIENTS_STATE";
+    private static final String STEPS_STATE = "STEPS_STATE";
 
 
     /**
@@ -73,24 +77,60 @@ public class DetailActivity extends AppCompatActivity {
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-        Intent detailIntent = getIntent();
-        if (detailIntent != null){
-            if (detailIntent.hasExtra(IngredientsFragment.INGREDIENTS_EXTRA)){
+        if (savedInstanceState != null){
+            if (savedInstanceState.containsKey(INGREDIENTS_STATE)){
                 ingredients = new ArrayList<>();
-                ArrayList<Parcelable> parcelables = detailIntent.getParcelableArrayListExtra(IngredientsFragment.INGREDIENTS_EXTRA);
+                ArrayList<Parcelable> parcelables = savedInstanceState.getParcelableArrayList(INGREDIENTS_STATE);
                 for (Parcelable parcelable : parcelables) {
                     ingredients.add((Ingredient) Parcels.unwrap(parcelable));
                 }
             }
-            if (detailIntent.hasExtra(StepsFragment.STEPS_EXTRA)){
+            if (savedInstanceState.containsKey(STEPS_STATE)){
                 steps = new ArrayList<>();
-                for (Parcelable parcelable : detailIntent.getParcelableArrayListExtra(StepsFragment.STEPS_EXTRA)) {
+                ArrayList<Parcelable> parcelables = savedInstanceState.getParcelableArrayList(STEPS_STATE);
+                for (Parcelable parcelable : parcelables) {
                     steps.add((Step) Parcels.unwrap(parcelable));
+                }
+            }
+        } else {
+            Intent detailIntent = getIntent();
+            if (detailIntent != null) {
+                if (detailIntent.hasExtra(IngredientsFragment.INGREDIENTS_EXTRA)) {
+                    ingredients = new ArrayList<>();
+                    ArrayList<Parcelable> parcelables = detailIntent.getParcelableArrayListExtra(IngredientsFragment.INGREDIENTS_EXTRA);
+                    for (Parcelable parcelable : parcelables) {
+                        ingredients.add((Ingredient) Parcels.unwrap(parcelable));
+                    }
+                }
+                if (detailIntent.hasExtra(StepsFragment.STEPS_EXTRA)) {
+                    steps = new ArrayList<>();
+                    ArrayList<Parcelable> parcelables = detailIntent.getParcelableArrayListExtra(StepsFragment.STEPS_EXTRA);
+                    for (Parcelable parcelable : parcelables) {
+                        steps.add((Step) Parcels.unwrap(parcelable));
+                    }
                 }
             }
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        if (ingredients != null){
+            ArrayList<Parcelable> ingredientParcelableList = new ArrayList<>();
+            for (Ingredient ingredient : ingredients) {
+                ingredientParcelableList.add(Parcels.wrap(ingredient));
+            }
+            outState.putParcelableArrayList(INGREDIENTS_STATE, ingredientParcelableList);
+        }
+        if (steps != null){
+            ArrayList<Parcelable> stepParcelableList =new ArrayList<>();
+            for (Step step : steps) {
+                stepParcelableList.add(Parcels.wrap(step));
+            }
+            outState.putParcelableArrayList(STEPS_STATE, stepParcelableList);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

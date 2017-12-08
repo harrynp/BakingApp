@@ -2,20 +2,14 @@ package com.github.harrynp.tasty;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.os.PersistableBundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.view.MenuItem;
 
 import com.github.harrynp.tasty.data.pojo.Step;
 import com.github.harrynp.tasty.databinding.ActivityStepDetailBinding;
 
 import org.parceler.Parcels;
-
-import java.util.ArrayList;
 
 public class StepDetailActivity extends AppCompatActivity {
 
@@ -56,6 +50,17 @@ public class StepDetailActivity extends AppCompatActivity {
             fragment = StepDetailFragment.newInstance(step);
             getSupportFragmentManager().beginTransaction().replace(R.id.step_fragment_container, fragment).commit();
 //            fragment = StepDetailFragment.newInstance(steps.get(currentStepPosition));
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

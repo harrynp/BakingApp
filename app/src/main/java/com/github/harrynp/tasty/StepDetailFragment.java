@@ -2,8 +2,6 @@ package com.github.harrynp.tasty;
 
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -20,13 +18,10 @@ import com.github.harrynp.tasty.data.pojo.Step;
 import com.github.harrynp.tasty.databinding.FragmentStepDetailBinding;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.Renderer;
-import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -42,8 +37,6 @@ import com.google.android.exoplayer2.util.Util;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.

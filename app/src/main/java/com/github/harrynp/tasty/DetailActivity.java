@@ -4,35 +4,26 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
-import android.widget.TextView;
 
 import com.github.harrynp.tasty.data.pojo.Ingredient;
-import com.github.harrynp.tasty.data.pojo.Recipe;
 import com.github.harrynp.tasty.data.pojo.Step;
 import com.github.harrynp.tasty.databinding.ActivityDetailBinding;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
     ActivityDetailBinding mBinding;

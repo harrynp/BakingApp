@@ -13,7 +13,6 @@ import com.github.harrynp.tasty.R;
 import com.github.harrynp.tasty.data.pojo.Ingredient;
 import com.github.harrynp.tasty.databinding.ListItemIngredientBinding;
 
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;

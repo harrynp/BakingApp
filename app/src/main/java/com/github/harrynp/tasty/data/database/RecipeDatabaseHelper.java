@@ -29,6 +29,34 @@ public final class RecipeDatabaseHelper {
         mContext = context;
     }
 
+    public void getRecipe(final long id, Observer<Recipe> observer){
+        Observable.create(new ObservableOnSubscribe<Recipe>() {
+            @Override
+            public void subscribe(ObservableEmitter<Recipe> e) throws Exception {
+                Uri contentUriWithId = RecipesContract.RecipeEntry.CONTENT_URI;
+                contentUriWithId = contentUriWithId.buildUpon().appendPath(Long.toString(id)).build();
+                Cursor cursor = mContext.getContentResolver()
+                        .query(contentUriWithId,
+                                null,
+                                null,
+                                null,
+                                RecipesContract.RecipeEntry.COLUMN_NAME + " DESC");
+                Recipe recipe;
+                if(cursor != null){
+                    cursor.moveToNext();
+                    recipe = buildRecipeFromCursor(cursor);
+                    cursor.close();
+                    e.onNext(recipe);
+                } else {
+                    e.onError(new NullPointerException("Recipe cursor is null."));
+                }
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
     public void getAllRecipes(Observer<ArrayList<Recipe>> observer){
         Observable.create(new ObservableOnSubscribe<ArrayList<Recipe>>() {
             @Override
@@ -79,16 +107,22 @@ public final class RecipeDatabaseHelper {
     private ArrayList<Recipe> buildRecipesFromCursor(Cursor cursor){
         ArrayList<Recipe> recipes = new ArrayList<>();
         while (cursor.moveToNext()) {
-            Recipe recipe = new Recipe();
-            recipe.setId(cursor.getLong(cursor.getColumnIndex(RecipesContract.RecipeEntry.COLUMN_ID)));
-            recipe.setName(cursor.getString(cursor.getColumnIndex(RecipesContract.RecipeEntry.COLUMN_NAME)));
-            recipe.setIngredients(converters.fromIngredientString(cursor.getString(cursor.getColumnIndex(RecipesContract.RecipeEntry.COLUMN_INGREDIENTS))));
-            recipe.setSteps(converters.fromStepString(cursor.getString(cursor.getColumnIndex(RecipesContract.RecipeEntry.COLUMN_STEPS))));
-            recipe.setServings(cursor.getInt(cursor.getColumnIndex(RecipesContract.RecipeEntry.COLUMN_SERVINGS)));
-            recipe.setImage(cursor.getString(cursor.getColumnIndex(RecipesContract.RecipeEntry.COLUMN_IMAGE)));
+            Recipe recipe = buildRecipeFromCursor(cursor);
             recipes.add(recipe);
         }
         return recipes;
+    }
+
+    @NonNull
+    private Recipe buildRecipeFromCursor(Cursor cursor){
+        Recipe recipe = new Recipe();
+        recipe.setId(cursor.getLong(cursor.getColumnIndex(RecipesContract.RecipeEntry.COLUMN_ID)));
+        recipe.setName(cursor.getString(cursor.getColumnIndex(RecipesContract.RecipeEntry.COLUMN_NAME)));
+        recipe.setIngredients(converters.fromIngredientString(cursor.getString(cursor.getColumnIndex(RecipesContract.RecipeEntry.COLUMN_INGREDIENTS))));
+        recipe.setSteps(converters.fromStepString(cursor.getString(cursor.getColumnIndex(RecipesContract.RecipeEntry.COLUMN_STEPS))));
+        recipe.setServings(cursor.getInt(cursor.getColumnIndex(RecipesContract.RecipeEntry.COLUMN_SERVINGS)));
+        recipe.setImage(cursor.getString(cursor.getColumnIndex(RecipesContract.RecipeEntry.COLUMN_IMAGE)));
+        return recipe;
     }
 
     @NonNull

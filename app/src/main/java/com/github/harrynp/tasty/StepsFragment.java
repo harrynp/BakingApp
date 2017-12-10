@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.harrynp.tasty.adapters.StepsAdapter;
+import com.github.harrynp.tasty.data.database.RecipeDatabaseHelper;
+import com.github.harrynp.tasty.data.pojo.Recipe;
 import com.github.harrynp.tasty.data.pojo.Step;
 import com.github.harrynp.tasty.databinding.FragmentStepBinding;
 
@@ -20,12 +22,15 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+
 
 /**
  * Created by harry on 12/4/2017.
  */
 
-public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapterOnClickHandler{
+public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapterOnClickHandler, Observer{
     private StepsAdapter stepsAdapter;
     private FragmentStepBinding mBinding;
 //    private ArrayList<Step> steps;
@@ -34,7 +39,7 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapter
 
     public StepsFragment(){}
 
-    public static StepsFragment newInstance(ArrayList<Step> stepArrayList) {
+    public static StepsFragment newInstance(ArrayList<Step> stepArrayList, long recipeId) {
         StepsFragment fragment = new StepsFragment();
         Bundle args = new Bundle();
         ArrayList<Parcelable> stepParcelableArrayList = new ArrayList<>();
@@ -44,6 +49,7 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapter
             }
         }
         args.putParcelableArrayList(STEPS_EXTRA, stepParcelableArrayList);
+        args.putLong("RECIPE_ID", recipeId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,7 +63,13 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapter
         mBinding.rvSteps.setLayoutManager(layoutManager);
         mBinding.rvSteps.setAdapter(stepsAdapter);
 //        steps = new ArrayList<>();
-        for (Parcelable parcelable : getArguments().getParcelableArrayList(STEPS_EXTRA)) {
+        Bundle args = getArguments();
+        long recipeId = args.getLong("RECIPE_ID", -1);
+        if (recipeId != -1) {
+            RecipeDatabaseHelper recipeDatabaseHelper = new RecipeDatabaseHelper(getContext());
+            recipeDatabaseHelper.getRecipe(recipeId, this);
+        }
+        for (Parcelable parcelable : args.getParcelableArrayList(STEPS_EXTRA)) {
             Step step = Parcels.unwrap(parcelable);
 //            steps.add(step);
             stepsAdapter.addStep(step);
@@ -84,5 +96,31 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapter
         step.setStepViewed(true);
         stepsAdapter.setViewed(adapterPosition);
         startActivity(stepDetailIntent);
+    }
+
+    @Override
+    public void onSubscribe(Disposable d) {
+
+    }
+
+    @Override
+    public void onNext(Object o) {
+        Recipe recipe = (Recipe) o;
+        if (recipe != null){
+            ArrayList<Step> steps = recipe.getSteps();
+            for (Step ingredient : steps) {
+                stepsAdapter.addStep(ingredient);
+            }
+        }
+    }
+
+    @Override
+    public void onError(Throwable e) {
+
+    }
+
+    @Override
+    public void onComplete() {
+
     }
 }

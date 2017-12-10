@@ -25,12 +25,14 @@ public class RecipesProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     public static final int RECIPES = 100;
     public static final int RECIPES_WITH_ID = 101;
+    public static final int RECIPES_WITH_NAME = 102;
     private static Converters converters = new Converters();
 
     private static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(RecipesContract.CONTENT_AUTHORITY, RecipesContract.PATH_RECIPES, RECIPES);
         uriMatcher.addURI(RecipesContract.CONTENT_AUTHORITY, RecipesContract.PATH_RECIPES + "/#", RECIPES_WITH_ID);
+        uriMatcher.addURI(RecipesContract.CONTENT_AUTHORITY, RecipesContract.PATH_RECIPES + "/*", RECIPES_WITH_NAME);
         return uriMatcher;
     }
 

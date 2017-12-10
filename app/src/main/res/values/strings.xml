@@ -9,4 +9,6 @@
     <string name="tab_text_ingredients">Ingredients</string>
     <string name="tab_text_steps">Steps</string>
     <string name="title_activity_step_detail">StepDetailActivity</string>
+    <string name="recipe_widget_title">Recipe Name</string>
+    <string name="recipe_choice_title">Choose Recipe:</string>
 </resources>

@@ -2,6 +2,7 @@ package com.github.harrynp.tasty;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.databinding.Observable;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.support.design.widget.TabLayout;
@@ -17,7 +18,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
+import com.github.harrynp.tasty.data.database.RecipeDatabaseHelper;
+import com.github.harrynp.tasty.data.database.RecipesDatabase;
+import com.github.harrynp.tasty.data.database.dao.RecipeDao;
 import com.github.harrynp.tasty.data.pojo.Ingredient;
+import com.github.harrynp.tasty.data.pojo.Recipe;
 import com.github.harrynp.tasty.data.pojo.Step;
 import com.github.harrynp.tasty.databinding.ActivityDetailBinding;
 
@@ -25,12 +30,17 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+
 public class DetailActivity extends AppCompatActivity {
     ActivityDetailBinding mBinding;
     private ArrayList<Ingredient> ingredients;
     private ArrayList<Step> steps;
+    private long recipeId;
     private static final String INGREDIENTS_STATE = "INGREDIENTS_STATE";
     private static final String STEPS_STATE = "STEPS_STATE";
+    RecipeDatabaseHelper recipeDatabaseHelper;
 
 
     /**
@@ -86,19 +96,24 @@ public class DetailActivity extends AppCompatActivity {
         } else {
             Intent detailIntent = getIntent();
             if (detailIntent != null) {
-                if (detailIntent.hasExtra(IngredientsFragment.INGREDIENTS_EXTRA)) {
-                    ingredients = new ArrayList<>();
-                    ArrayList<Parcelable> parcelables = detailIntent.getParcelableArrayListExtra(IngredientsFragment.INGREDIENTS_EXTRA);
-                    for (Parcelable parcelable : parcelables) {
-                        ingredients.add((Ingredient) Parcels.unwrap(parcelable));
+                if (detailIntent.hasExtra("RECIPE_ID")) {
+                    recipeId = detailIntent.getLongExtra("RECIPE_ID", -1);
+                } else {
+                    if (detailIntent.hasExtra(IngredientsFragment.INGREDIENTS_EXTRA)) {
+                        ingredients = new ArrayList<>();
+                        ArrayList<Parcelable> parcelables = detailIntent.getParcelableArrayListExtra(IngredientsFragment.INGREDIENTS_EXTRA);
+                        for (Parcelable parcelable : parcelables) {
+                            ingredients.add((Ingredient) Parcels.unwrap(parcelable));
+                        }
                     }
-                }
-                if (detailIntent.hasExtra(StepsFragment.STEPS_EXTRA)) {
-                    steps = new ArrayList<>();
-                    ArrayList<Parcelable> parcelables = detailIntent.getParcelableArrayListExtra(StepsFragment.STEPS_EXTRA);
-                    for (Parcelable parcelable : parcelables) {
-                        steps.add((Step) Parcels.unwrap(parcelable));
+                    if (detailIntent.hasExtra(StepsFragment.STEPS_EXTRA)) {
+                        steps = new ArrayList<>();
+                        ArrayList<Parcelable> parcelables = detailIntent.getParcelableArrayListExtra(StepsFragment.STEPS_EXTRA);
+                        for (Parcelable parcelable : parcelables) {
+                            steps.add((Step) Parcels.unwrap(parcelable));
+                        }
                     }
+                    recipeId = -1;
                 }
             }
         }
@@ -145,6 +160,7 @@ public class DetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -159,9 +175,9 @@ public class DetailActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             if (position == 0) {
-                return IngredientsFragment.newInstance(ingredients);
+                return IngredientsFragment.newInstance(ingredients, recipeId);
             } else {
-                return StepsFragment.newInstance(steps);
+                return StepsFragment.newInstance(steps, recipeId);
             }
         }
 

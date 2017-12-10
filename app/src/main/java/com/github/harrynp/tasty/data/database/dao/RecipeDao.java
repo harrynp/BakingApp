@@ -26,6 +26,10 @@ public interface RecipeDao {
             + " WHERE " + RecipesContract.RecipeEntry.COLUMN_ID + " = :id")
     Cursor selectRecipeById(long id);
 
+    @Query("SELECT * FROM " + RecipesContract.RecipeEntry.TABLE_NAME
+            + " WHERE " + RecipesContract.RecipeEntry.COLUMN_ID + " = :id")
+    Recipe[] getRecipeById(long id);
+
     @Query("SELECT COUNT(*) FROM " + RecipesContract.RecipeEntry.TABLE_NAME)
     int count();
 

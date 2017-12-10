@@ -12,18 +12,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.harrynp.tasty.adapters.IngredientsAdapter;
+import com.github.harrynp.tasty.data.database.RecipeDatabaseHelper;
 import com.github.harrynp.tasty.data.pojo.Ingredient;
+import com.github.harrynp.tasty.data.pojo.Recipe;
 import com.github.harrynp.tasty.databinding.FragmentIngredientBinding;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+
 /**
  * Created by harry on 12/4/2017.
  */
 
-public class IngredientsFragment extends Fragment {
+public class IngredientsFragment extends Fragment implements Observer{
 
     private FragmentIngredientBinding mBinding;
     private IngredientsAdapter ingredientsAdapter;
@@ -32,7 +37,7 @@ public class IngredientsFragment extends Fragment {
 
     public IngredientsFragment(){}
 
-    public static IngredientsFragment newInstance(ArrayList<Ingredient> ingredientArrayList) {
+    public static IngredientsFragment newInstance(ArrayList<Ingredient> ingredientArrayList, long recipeId) {
         IngredientsFragment fragment = new IngredientsFragment();
         Bundle args = new Bundle();
         ArrayList<Parcelable> ingredientParcelableArrayList = new ArrayList<>();
@@ -42,6 +47,7 @@ public class IngredientsFragment extends Fragment {
             }
         }
         args.putParcelableArrayList(INGREDIENTS_EXTRA, ingredientParcelableArrayList);
+        args.putLong("RECIPE_ID", recipeId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,7 +60,13 @@ public class IngredientsFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mBinding.rvIngredients.setLayoutManager(layoutManager);
         mBinding.rvIngredients.setAdapter(ingredientsAdapter);
-        for (Parcelable parcelable : getArguments().getParcelableArrayList(INGREDIENTS_EXTRA)){
+        Bundle args = getArguments();
+        long recipeId = args.getLong("RECIPE_ID", -1);
+        if (recipeId != -1) {
+            RecipeDatabaseHelper recipeDatabaseHelper = new RecipeDatabaseHelper(getContext());
+            recipeDatabaseHelper.getRecipe(recipeId, this);
+        }
+        for (Parcelable parcelable : args.getParcelableArrayList(INGREDIENTS_EXTRA)){
             Ingredient ingredient = Parcels.unwrap(parcelable);
             ingredientsAdapter.addIngredient(ingredient);
         }
@@ -71,5 +83,31 @@ public class IngredientsFragment extends Fragment {
         super.onSaveInstanceState(outState);
         int position = ((LinearLayoutManager) mBinding.rvIngredients.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
         outState.putInt(SCROLLBAR_POSITION_KEY, position);
+    }
+
+    @Override
+    public void onSubscribe(Disposable d) {
+
+    }
+
+    @Override
+    public void onNext(Object o) {
+        Recipe recipe = (Recipe) o;
+        if (recipe != null){
+            ArrayList<Ingredient> ingredients = recipe.getIngredients();
+            for (Ingredient ingredient : ingredients) {
+                ingredientsAdapter.addIngredient(ingredient);
+            }
+        }
+    }
+
+    @Override
+    public void onError(Throwable e) {
+
+    }
+
+    @Override
+    public void onComplete() {
+
     }
 }

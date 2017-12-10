@@ -35,7 +35,7 @@
         <provider
             android:name=".data.database.RecipesProvider"
             android:authorities="@string/content_authority"
-            android:exported="false" />
+            android:exported="true" />
 
         <activity
             android:name=".StepDetailActivity"
@@ -46,6 +46,27 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.github.harrynp.tasty.DetailActivity" />
         </activity>
+
+        <receiver android:name=".widget.RecipeIngredientsWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recipe_ingredients_widget_info" />
+        </receiver>
+
+        <activity android:name=".widget.RecipeIngredientsWidgetConfigureActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".widget.RecipeIngredientsWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
     </application>
 
 </manifest>

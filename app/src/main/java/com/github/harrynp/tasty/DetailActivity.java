@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-import com.github.harrynp.tasty.data.database.RecipeDatabaseHelper;
 import com.github.harrynp.tasty.data.pojo.Ingredient;
 import com.github.harrynp.tasty.data.pojo.Step;
 import com.github.harrynp.tasty.databinding.ActivityDetailBinding;
@@ -34,7 +33,7 @@ public class DetailActivity extends AppCompatActivity {
     private long recipeId;
     private static final String INGREDIENTS_STATE = "INGREDIENTS_STATE";
     private static final String STEPS_STATE = "STEPS_STATE";
-    RecipeDatabaseHelper recipeDatabaseHelper;
+    private boolean mTwoPane;
 
 
     /**

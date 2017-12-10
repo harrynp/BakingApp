@@ -2,7 +2,6 @@ package com.github.harrynp.tasty;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.databinding.Observable;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.support.design.widget.TabLayout;
@@ -19,10 +18,7 @@ import android.view.MenuItem;
 
 
 import com.github.harrynp.tasty.data.database.RecipeDatabaseHelper;
-import com.github.harrynp.tasty.data.database.RecipesDatabase;
-import com.github.harrynp.tasty.data.database.dao.RecipeDao;
 import com.github.harrynp.tasty.data.pojo.Ingredient;
-import com.github.harrynp.tasty.data.pojo.Recipe;
 import com.github.harrynp.tasty.data.pojo.Step;
 import com.github.harrynp.tasty.databinding.ActivityDetailBinding;
 
@@ -30,8 +26,6 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 public class DetailActivity extends AppCompatActivity {
     ActivityDetailBinding mBinding;

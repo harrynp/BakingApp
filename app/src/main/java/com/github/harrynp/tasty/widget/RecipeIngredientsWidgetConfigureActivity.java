@@ -7,8 +7,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.test.espresso.IdlingResource;
 import android.support.v7.widget.LinearLayoutManager;
 
+import com.github.harrynp.tasty.IdlingResource.SimpleIdlingResource;
 import com.github.harrynp.tasty.R;
 import com.github.harrynp.tasty.adapters.RecipeSpinnerAdapter;
 import com.github.harrynp.tasty.data.database.RecipeDatabaseHelper;
@@ -101,7 +105,6 @@ public class RecipeIngredientsWidgetConfigureActivity extends Activity implement
         mBinding.rvRecipeChoices.setAdapter(recipeSpinnerAdapter);
         recipeDatabaseHelper = new RecipeDatabaseHelper(this);
         recipeDatabaseHelper.getAllRecipes(this);
-
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {

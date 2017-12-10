@@ -6,6 +6,8 @@ import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.harrynp.tasty.IdlingResource.SimpleIdlingResource;
 import com.github.harrynp.tasty.adapters.RecipeAdapter;
 import com.github.harrynp.tasty.data.database.RecipeDatabaseHelper;
 import com.github.harrynp.tasty.data.pojo.Ingredient;
@@ -43,7 +46,16 @@ public class MainActivityFragment extends Fragment implements RecipeAdapter.Reci
     private RecipeApiClient recipeApiClient;
     private static final String SAVED_RECIPES_KEY = "saved_recipes";
     private static final String SCROLLBAR_POSITION_KEY = "scrollbar_position";
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
 
+    @NonNull
+    public IdlingResource getIdlingResource(){
+        if(mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
+    }
     public MainActivityFragment() {
     }
 
@@ -55,6 +67,7 @@ public class MainActivityFragment extends Fragment implements RecipeAdapter.Reci
         recipeDatabaseHelper = new RecipeDatabaseHelper(getContext());
         recipeApiClient = new RecipeApiClient();
         recipes = new ArrayList<>();
+        getIdlingResource();
         mBinding.swiperefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh() {
@@ -117,6 +130,9 @@ public class MainActivityFragment extends Fragment implements RecipeAdapter.Reci
     }
 
     private void updateRecipes(){
+        if (mIdlingResource != null){
+            mIdlingResource.setIdleState(false);
+        }
         if (isOnline()) {
             mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
             recipeApiClient.getRecipes(this);
@@ -192,6 +208,9 @@ public class MainActivityFragment extends Fragment implements RecipeAdapter.Reci
 
     @Override
     public void onNext(Object o) {
+        if (mIdlingResource != null){
+            mIdlingResource.setIdleState(true);
+        }
         ArrayList<Recipe> recipeArrayList = (ArrayList<Recipe>) o;
         if (recipeArrayList == null || recipeArrayList.size() == 0){
             recipeApiClient.getRecipes(this);

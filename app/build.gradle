@@ -25,6 +25,10 @@ android {
         }
     }
     dataBinding.enabled = true
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -60,9 +64,15 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
 
     implementation 'com.google.android.exoplayer:exoplayer:2.6.0'
+    implementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.1'
+
 
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test:rules:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:3.0.1'
+
+
 }

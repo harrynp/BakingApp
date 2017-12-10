@@ -2,6 +2,7 @@ package com.github.harrynp.tasty;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.support.design.widget.TabLayout;
@@ -24,90 +25,52 @@ import com.github.harrynp.tasty.databinding.ActivityDetailBinding;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements DetailFragment.OnFragmentInteractionListener{
     ActivityDetailBinding mBinding;
-    private ArrayList<Ingredient> ingredients;
-    private ArrayList<Step> steps;
+    private List<Parcelable> ingredients;
+    private List<Parcelable> steps;
     private long recipeId;
-    private static final String INGREDIENTS_STATE = "INGREDIENTS_STATE";
-    private static final String STEPS_STATE = "STEPS_STATE";
+
     private boolean mTwoPane;
 
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
-        setSupportActionBar(mBinding.detailToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        Intent detailIntent = getIntent();
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = mBinding.detailContainer;
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        TabLayout tabLayout = mBinding.tabs;
-
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
-        if (savedInstanceState != null){
-            if (savedInstanceState.containsKey(INGREDIENTS_STATE)){
-                ingredients = new ArrayList<>();
-                ArrayList<Parcelable> parcelables = savedInstanceState.getParcelableArrayList(INGREDIENTS_STATE);
-                for (Parcelable parcelable : parcelables) {
-                    ingredients.add((Ingredient) Parcels.unwrap(parcelable));
-                }
+        if (detailIntent != null){
+            if (detailIntent.hasExtra(IngredientsFragment.INGREDIENTS_EXTRA)){
+                ingredients = detailIntent.getParcelableArrayListExtra(IngredientsFragment.INGREDIENTS_EXTRA);
             }
-            if (savedInstanceState.containsKey(STEPS_STATE)){
-                steps = new ArrayList<>();
-                ArrayList<Parcelable> parcelables = savedInstanceState.getParcelableArrayList(STEPS_STATE);
-                for (Parcelable parcelable : parcelables) {
-                    steps.add((Step) Parcels.unwrap(parcelable));
-                }
+            if (detailIntent.hasExtra(StepsFragment.STEPS_EXTRA)){
+                steps = detailIntent.getParcelableArrayListExtra(StepsFragment.STEPS_EXTRA);
+            }
+            recipeId = detailIntent.getLongExtra("RECIPE_ID", -1);
+        }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        if (findViewById(R.id.ll_two_pane_layout) != null){
+            mTwoPane = true;
+            if (savedInstanceState == null){
+                DetailFragment detailFragment = DetailFragment.newInstance(ingredients, steps, recipeId);
+                fragmentManager.beginTransaction()
+                        .add(R.id.two_pane_detail_container, detailFragment)
+                        .commit();
             }
         } else {
-            Intent detailIntent = getIntent();
-            if (detailIntent != null) {
-                if (detailIntent.hasExtra("RECIPE_ID")) {
-                    recipeId = detailIntent.getLongExtra("RECIPE_ID", -1);
-                } else {
-                    if (detailIntent.hasExtra(IngredientsFragment.INGREDIENTS_EXTRA)) {
-                        ingredients = new ArrayList<>();
-                        ArrayList<Parcelable> parcelables = detailIntent.getParcelableArrayListExtra(IngredientsFragment.INGREDIENTS_EXTRA);
-                        for (Parcelable parcelable : parcelables) {
-                            ingredients.add((Ingredient) Parcels.unwrap(parcelable));
-                        }
-                    }
-                    if (detailIntent.hasExtra(StepsFragment.STEPS_EXTRA)) {
-                        steps = new ArrayList<>();
-                        ArrayList<Parcelable> parcelables = detailIntent.getParcelableArrayListExtra(StepsFragment.STEPS_EXTRA);
-                        for (Parcelable parcelable : parcelables) {
-                            steps.add((Step) Parcels.unwrap(parcelable));
-                        }
-                    }
-                    recipeId = -1;
-                }
+            mTwoPane = false;
+            if (savedInstanceState == null) {
+                DetailFragment detailFragment = DetailFragment.newInstance(ingredients, steps, recipeId);
+                fragmentManager.beginTransaction()
+                        .add(R.id.detail_container, detailFragment)
+                        .commit();
             }
         }
     }
@@ -115,20 +78,6 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-        if (ingredients != null){
-            ArrayList<Parcelable> ingredientParcelableList = new ArrayList<>();
-            for (Ingredient ingredient : ingredients) {
-                ingredientParcelableList.add(Parcels.wrap(ingredient));
-            }
-            outState.putParcelableArrayList(INGREDIENTS_STATE, ingredientParcelableList);
-        }
-        if (steps != null){
-            ArrayList<Parcelable> stepParcelableList =new ArrayList<>();
-            for (Step step : steps) {
-                stepParcelableList.add(Parcels.wrap(step));
-            }
-            outState.putParcelableArrayList(STEPS_STATE, stepParcelableList);
-        }
     }
 
     @Override
@@ -153,31 +102,8 @@ public class DetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            if (position == 0) {
-                return IngredientsFragment.newInstance(ingredients, recipeId);
-            } else {
-                return StepsFragment.newInstance(steps, recipeId);
-            }
-        }
-
-        @Override
-        public int getCount() {
-            // Show 2 total pages.
-            return 2;
-        }
     }
 }

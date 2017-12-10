@@ -21,6 +21,7 @@ import com.github.harrynp.tasty.databinding.FragmentStepBinding;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -39,16 +40,10 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapter
 
     public StepsFragment(){}
 
-    public static StepsFragment newInstance(ArrayList<Step> stepArrayList, long recipeId) {
+    public static StepsFragment newInstance(List<Parcelable> stepsList, long recipeId) {
         StepsFragment fragment = new StepsFragment();
         Bundle args = new Bundle();
-        ArrayList<Parcelable> stepParcelableArrayList = new ArrayList<>();
-        if (stepArrayList != null){
-            for (Step step : stepArrayList){
-                stepParcelableArrayList.add(Parcels.wrap(step));
-            }
-        }
-        args.putParcelableArrayList(STEPS_EXTRA, stepParcelableArrayList);
+        args.putParcelableArrayList(STEPS_EXTRA, (ArrayList<? extends Parcelable>) stepsList);
         args.putLong("RECIPE_ID", recipeId);
         fragment.setArguments(args);
         return fragment;
@@ -69,10 +64,12 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapter
             RecipeDatabaseHelper recipeDatabaseHelper = new RecipeDatabaseHelper(getContext());
             recipeDatabaseHelper.getRecipe(recipeId, this);
         }
-        for (Parcelable parcelable : args.getParcelableArrayList(STEPS_EXTRA)) {
-            Step step = Parcels.unwrap(parcelable);
-//            steps.add(step);
-            stepsAdapter.addStep(step);
+        if(args.containsKey(STEPS_EXTRA)) {
+            for (Parcelable parcelable : args.getParcelableArrayList(STEPS_EXTRA)) {
+                Step step = Parcels.unwrap(parcelable);
+                //            steps.add(step);
+                stepsAdapter.addStep(step);
+            }
         }
         if (savedInstanceState != null){
             if (savedInstanceState.containsKey(SCROLLBAR_POSITION_KEY)){

@@ -20,6 +20,7 @@ import com.github.harrynp.tasty.databinding.FragmentIngredientBinding;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -37,16 +38,10 @@ public class IngredientsFragment extends Fragment implements Observer{
 
     public IngredientsFragment(){}
 
-    public static IngredientsFragment newInstance(ArrayList<Ingredient> ingredientArrayList, long recipeId) {
+    public static IngredientsFragment newInstance(List<Parcelable> ingredientsList, long recipeId) {
         IngredientsFragment fragment = new IngredientsFragment();
         Bundle args = new Bundle();
-        ArrayList<Parcelable> ingredientParcelableArrayList = new ArrayList<>();
-        if (ingredientArrayList != null){
-            for (Ingredient ingredient : ingredientArrayList){
-                ingredientParcelableArrayList.add(Parcels.wrap(ingredient));
-            }
-        }
-        args.putParcelableArrayList(INGREDIENTS_EXTRA, ingredientParcelableArrayList);
+        args.putParcelableArrayList(INGREDIENTS_EXTRA, (ArrayList<? extends Parcelable>) ingredientsList);
         args.putLong("RECIPE_ID", recipeId);
         fragment.setArguments(args);
         return fragment;
@@ -66,9 +61,11 @@ public class IngredientsFragment extends Fragment implements Observer{
             RecipeDatabaseHelper recipeDatabaseHelper = new RecipeDatabaseHelper(getContext());
             recipeDatabaseHelper.getRecipe(recipeId, this);
         }
-        for (Parcelable parcelable : args.getParcelableArrayList(INGREDIENTS_EXTRA)){
-            Ingredient ingredient = Parcels.unwrap(parcelable);
-            ingredientsAdapter.addIngredient(ingredient);
+        if (args.containsKey(INGREDIENTS_EXTRA)) {
+            for (Parcelable parcelable : args.getParcelableArrayList(INGREDIENTS_EXTRA)) {
+                Ingredient ingredient = Parcels.unwrap(parcelable);
+                ingredientsAdapter.addIngredient(ingredient);
+            }
         }
         if (savedInstanceState != null){
             if (savedInstanceState.containsKey(SCROLLBAR_POSITION_KEY)){

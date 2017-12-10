@@ -5,30 +5,24 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
-import android.support.design.widget.TabLayout;
 
 import android.support.v7.app.AppCompatActivity;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-import com.github.harrynp.tasty.data.pojo.Ingredient;
 import com.github.harrynp.tasty.data.pojo.Step;
 import com.github.harrynp.tasty.databinding.ActivityDetailBinding;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
-public class DetailActivity extends AppCompatActivity implements DetailFragment.OnFragmentInteractionListener{
+public class DetailActivity extends AppCompatActivity implements DetailFragment.OnFragmentInteractionListener, StepsFragment.OnStepClickListener{
     ActivityDetailBinding mBinding;
     private List<Parcelable> ingredients;
     private List<Parcelable> steps;
@@ -63,6 +57,12 @@ public class DetailActivity extends AppCompatActivity implements DetailFragment.
                 fragmentManager.beginTransaction()
                         .add(R.id.two_pane_detail_container, detailFragment)
                         .commit();
+                if (steps != null || steps.isEmpty()) {
+                    StepDetailFragment stepDetailFragment = StepDetailFragment.newInstance((Step) Parcels.unwrap(steps.get(0)), false);
+                    fragmentManager.beginTransaction()
+                            .add(R.id.two_pane_step_detail_container, stepDetailFragment)
+                            .commit();
+                }
             }
         } else {
             mTwoPane = false;
@@ -105,5 +105,20 @@ public class DetailActivity extends AppCompatActivity implements DetailFragment.
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void OnStepClickListener(Step step, int adapterPosition) {
+        if (mTwoPane){
+            StepDetailFragment stepDetailFragment = StepDetailFragment.newInstance(step, true);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.two_pane_step_detail_container, stepDetailFragment)
+                    .commit();
+        } else {
+            Intent stepDetailIntent = new Intent(this, StepDetailActivity.class);
+            stepDetailIntent.putExtra(StepDetailFragment.STEP_EXTRA, Parcels.wrap(step));
+            step.setStepViewed(true);
+            startActivity(stepDetailIntent);
+        }
     }
 }

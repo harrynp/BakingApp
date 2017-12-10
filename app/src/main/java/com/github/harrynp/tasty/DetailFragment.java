@@ -1,7 +1,6 @@
 package com.github.harrynp.tasty;
 
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,13 +15,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.github.harrynp.tasty.data.pojo.Ingredient;
-import com.github.harrynp.tasty.data.pojo.Step;
 import com.github.harrynp.tasty.databinding.FragmentDetailBinding;
 
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;

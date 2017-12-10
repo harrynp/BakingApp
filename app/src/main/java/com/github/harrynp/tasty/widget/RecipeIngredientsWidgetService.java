@@ -2,28 +2,14 @@ package com.github.harrynp.tasty.widget;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import com.github.harrynp.tasty.IngredientsFragment;
 import com.github.harrynp.tasty.R;
-import com.github.harrynp.tasty.StepsFragment;
 import com.github.harrynp.tasty.data.database.RecipesDatabase;
 import com.github.harrynp.tasty.data.database.dao.RecipeDao;
 import com.github.harrynp.tasty.data.pojo.Ingredient;
 import com.github.harrynp.tasty.data.pojo.Recipe;
-import com.github.harrynp.tasty.data.pojo.Step;
-
-import org.parceler.Parcels;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by harry on 12/8/2017.

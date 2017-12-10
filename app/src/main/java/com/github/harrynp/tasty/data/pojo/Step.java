@@ -1,7 +1,5 @@
 package com.github.harrynp.tasty.data.pojo;
 
-import android.arch.persistence.room.Ignore;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

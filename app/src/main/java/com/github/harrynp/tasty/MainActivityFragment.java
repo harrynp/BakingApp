@@ -74,9 +74,10 @@ public class MainActivityFragment extends Fragment implements RecipeAdapter.Reci
                 updateRecipes();
             }
         });
-        GridAutofitLayoutManager layoutManager = new GridAutofitLayoutManager(getContext(), 1000);
+        GridAutofitLayoutManager layoutManager = new GridAutofitLayoutManager(getContext(), 1200);
         mBinding.rvRecipes.setLayoutManager(layoutManager);
         mBinding.rvRecipes.setAdapter(recipeAdapter);
+        mBinding.rvRecipes.setHasFixedSize(false);
         if (savedInstanceState != null){
             if (savedInstanceState.containsKey(SAVED_RECIPES_KEY)){
                 ArrayList<Parcelable> recipeParcelableArrayList = savedInstanceState.getParcelableArrayList(SAVED_RECIPES_KEY);

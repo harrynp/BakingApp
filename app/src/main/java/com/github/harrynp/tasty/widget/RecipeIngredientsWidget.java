@@ -9,10 +9,6 @@ import android.widget.RemoteViews;
 
 import com.github.harrynp.tasty.DetailActivity;
 import com.github.harrynp.tasty.R;
-import com.github.harrynp.tasty.data.database.RecipeDatabaseHelper;
-import com.github.harrynp.tasty.data.database.RecipesDatabase;
-import com.github.harrynp.tasty.data.database.dao.RecipeDao;
-import com.github.harrynp.tasty.data.pojo.Recipe;
 
 /**
  * Implementation of App Widget functionality.

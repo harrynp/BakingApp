@@ -42,21 +42,24 @@ import org.parceler.Parcels;
  * A placeholder fragment containing a simple view.
  */
 public class StepDetailFragment extends Fragment implements Player.EventListener{
-    FragmentStepDetailBinding mBinding;
+    private FragmentStepDetailBinding mBinding;
     public static String STEP_EXTRA = "STEP_EXTRA";
-    Step step;
+    public static String PLAY_EXTRA = "PLAY_EXTRA";
+    private Step step;
+    private boolean playWhenReady;
+
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
     private static MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mStateBuilder;
     private long currentPosition;
-    private static final String LOG_TAG = StepDetailFragment.class.getSimpleName();
 
 
-    public static StepDetailFragment newInstance(Step step){
+    public static StepDetailFragment newInstance(Step step, boolean playWhenReady){
         StepDetailFragment fragment = new StepDetailFragment();
         Bundle args = new Bundle();
         args.putParcelable(STEP_EXTRA, Parcels.wrap(step));
+        args.putBoolean(PLAY_EXTRA, playWhenReady);
         fragment.setArguments(args);
         return fragment;
     }
@@ -79,6 +82,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         }
         if (step != null){
             if (step.getVideoURL() != null && !step.getVideoURL().isEmpty()){
+                playWhenReady = getArguments().getBoolean(PLAY_EXTRA, false);
                 mBinding.flStepDetailFragment.setVisibility(View.VISIBLE);
                 mBinding.ivStepThumbnail.setVisibility(View.INVISIBLE);
                 mBinding.exoPlayer.setVisibility(View.VISIBLE);
@@ -137,7 +141,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
 
     private void initializeMediaSession() {
         // Create a MediaSessionCompat.
-        mMediaSession = new MediaSessionCompat(getContext(), LOG_TAG);
+        mMediaSession = new MediaSessionCompat(getContext(), StepDetailFragment.class.getSimpleName());
 
         // Enable callbacks from MediaButtons and TransportControls.
         mMediaSession.setFlags(
@@ -177,7 +181,8 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
             MediaSource mediaSource = new ExtractorMediaSource(videoUri, new DefaultDataSourceFactory(
                     getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+            if (playWhenReady) mExoPlayer.setPlayWhenReady(true);
+            else mExoPlayer.setPlayWhenReady(false);
         }
     }
 

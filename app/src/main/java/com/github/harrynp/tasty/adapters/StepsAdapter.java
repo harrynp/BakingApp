@@ -40,10 +40,6 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsAdapter
         notifyDataSetChanged();
     }
 
-    public void setViewed(int adpaterPosition){
-        notifyItemChanged(adpaterPosition);
-    }
-
     public StepsAdapter(Context context, StepsAdapterOnClickHandler clickHandler){
         mContext = context;
         mClickHandler = clickHandler;

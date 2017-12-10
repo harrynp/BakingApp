@@ -1,6 +1,6 @@
 package com.github.harrynp.tasty;
 
-import android.content.Intent;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -37,6 +37,7 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapter
 //    private ArrayList<Step> steps;
     public static String STEPS_EXTRA = "STEPS_EXTRA";
     private static String SCROLLBAR_POSITION_KEY = "SCROLLBAR_POSITION_KEY";
+    private OnStepClickListener mListener;
 
     public StepsFragment(){}
 
@@ -88,12 +89,30 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapter
 
     @Override
     public void onClick(Step step, int adapterPosition) {
-        Intent stepDetailIntent = new Intent(getActivity(), StepDetailActivity.class);
-        stepDetailIntent.putExtra(StepDetailFragment.STEP_EXTRA, Parcels.wrap(step));
-        step.setStepViewed(true);
-        stepsAdapter.setViewed(adapterPosition);
-        startActivity(stepDetailIntent);
+        mListener.OnStepClickListener(step, adapterPosition);
     }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnStepClickListener) {
+            mListener = (OnStepClickListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnStepClickListener {
+        void OnStepClickListener(Step step, int adapterPosition);
+    }
+
 
     @Override
     public void onSubscribe(Disposable d) {

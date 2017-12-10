@@ -47,9 +47,8 @@ public class StepDetailActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             fragment = (StepDetailFragment) getSupportFragmentManager().getFragment(savedInstanceState, "stepDetailFragment");
         } else {
-            fragment = StepDetailFragment.newInstance(step);
+            fragment = StepDetailFragment.newInstance(step, true);
             getSupportFragmentManager().beginTransaction().replace(R.id.step_fragment_container, fragment).commit();
-//            fragment = StepDetailFragment.newInstance(steps.get(currentStepPosition));
         }
     }
 

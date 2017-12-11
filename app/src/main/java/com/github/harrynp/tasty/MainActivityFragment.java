@@ -74,7 +74,7 @@ public class MainActivityFragment extends Fragment implements RecipeAdapter.Reci
                 updateRecipes();
             }
         });
-        GridAutofitLayoutManager layoutManager = new GridAutofitLayoutManager(getContext(), 1200);
+        GridAutofitLayoutManager layoutManager = new GridAutofitLayoutManager(getContext(), 800);
         mBinding.rvRecipes.setLayoutManager(layoutManager);
         mBinding.rvRecipes.setAdapter(recipeAdapter);
         mBinding.rvRecipes.setHasFixedSize(false);

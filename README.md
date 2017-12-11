@@ -1,6 +1,8 @@
 # BakingApp
 
-App made for [Android Developer Nanodegree Program](https://www.udacity.com/course/android-developer-nanodegree-by-google--nd801).  This baking app will allow Udacity’s resident baker-in-chief, Miriam, to share her recipes with the world.
+An app I made for [Android Developer Nanodegree Program](https://www.udacity.com/course/android-developer-nanodegree-by-google--nd801).
+
+This baking app will allow Udacity’s resident baker-in-chief, Miriam, to share her recipes with the world.  This app that will allow a user to select a recipe and see video-guided steps for how to complete it.
 
 ## Libraries Used
 

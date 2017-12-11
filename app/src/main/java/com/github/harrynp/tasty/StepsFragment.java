@@ -44,7 +44,9 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapter
     public static StepsFragment newInstance(List<Parcelable> stepsList, long recipeId) {
         StepsFragment fragment = new StepsFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(STEPS_EXTRA, (ArrayList<? extends Parcelable>) stepsList);
+        if (stepsList != null){
+            args.putParcelableArrayList(STEPS_EXTRA, (ArrayList<? extends Parcelable>) stepsList);
+        }
         args.putLong("RECIPE_ID", recipeId);
         fragment.setArguments(args);
         return fragment;

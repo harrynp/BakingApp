@@ -41,7 +41,9 @@ public class IngredientsFragment extends Fragment implements Observer{
     public static IngredientsFragment newInstance(List<Parcelable> ingredientsList, long recipeId) {
         IngredientsFragment fragment = new IngredientsFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(INGREDIENTS_EXTRA, (ArrayList<? extends Parcelable>) ingredientsList);
+        if (ingredientsList != null) {
+            args.putParcelableArrayList(INGREDIENTS_EXTRA, (ArrayList<? extends Parcelable>) ingredientsList);
+        }
         args.putLong("RECIPE_ID", recipeId);
         fragment.setArguments(args);
         return fragment;

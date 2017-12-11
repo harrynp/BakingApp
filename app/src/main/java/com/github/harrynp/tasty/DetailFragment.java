@@ -72,8 +72,12 @@ public class DetailFragment extends Fragment {
     public static DetailFragment newInstance(List<Parcelable> ingredientsList, List<Parcelable> stepsList, long recipeId) {
         DetailFragment fragment = new DetailFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(IngredientsFragment.INGREDIENTS_EXTRA, (ArrayList<? extends Parcelable>) ingredientsList);
-        args.putParcelableArrayList(StepsFragment.STEPS_EXTRA, (ArrayList<? extends Parcelable>) stepsList);
+        if (ingredientsList != null){
+            args.putParcelableArrayList(IngredientsFragment.INGREDIENTS_EXTRA, (ArrayList<? extends Parcelable>) ingredientsList);
+        }
+        if (stepsList != null){
+            args.putParcelableArrayList(StepsFragment.STEPS_EXTRA, (ArrayList<? extends Parcelable>) stepsList);
+        }
         args.putLong("RECIPE_ID", recipeId);
         fragment.setArguments(args);
         return fragment;

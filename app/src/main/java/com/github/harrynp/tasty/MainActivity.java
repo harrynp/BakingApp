@@ -8,7 +8,7 @@ import com.github.harrynp.tasty.databinding.ActivityMainBinding;
 
 import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private ActivityMainBinding mBinding;
 
@@ -21,4 +21,5 @@ public class MainActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         setSupportActionBar(mBinding.toolbar);
     }
+
 }

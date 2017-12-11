@@ -27,6 +27,7 @@ public class DetailActivity extends AppCompatActivity implements DetailFragment.
     private List<Parcelable> ingredients;
     private List<Parcelable> steps;
     private long recipeId;
+    private String recipeName;
 
     private boolean mTwoPane;
 
@@ -46,6 +47,9 @@ public class DetailActivity extends AppCompatActivity implements DetailFragment.
             if (detailIntent.hasExtra(StepsFragment.STEPS_EXTRA)){
                 steps = detailIntent.getParcelableArrayListExtra(StepsFragment.STEPS_EXTRA);
             }
+            if (detailIntent.hasExtra("RECIPE_NAME")){
+                recipeName = detailIntent.getStringExtra("RECIPE_NAME");
+            }
             recipeId = detailIntent.getLongExtra("RECIPE_ID", -1);
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -53,7 +57,7 @@ public class DetailActivity extends AppCompatActivity implements DetailFragment.
         if (findViewById(R.id.ll_two_pane_layout) != null){
             mTwoPane = true;
             if (savedInstanceState == null){
-                DetailFragment detailFragment = DetailFragment.newInstance(ingredients, steps, recipeId);
+                DetailFragment detailFragment = DetailFragment.newInstance(ingredients, steps, recipeId, recipeName);
                 fragmentManager.beginTransaction()
                         .add(R.id.two_pane_detail_container, detailFragment)
                         .commit();
@@ -67,7 +71,7 @@ public class DetailActivity extends AppCompatActivity implements DetailFragment.
         } else {
             mTwoPane = false;
             if (savedInstanceState == null) {
-                DetailFragment detailFragment = DetailFragment.newInstance(ingredients, steps, recipeId);
+                DetailFragment detailFragment = DetailFragment.newInstance(ingredients, steps, recipeId, recipeName);
                 fragmentManager.beginTransaction()
                         .add(R.id.detail_container, detailFragment)
                         .commit();

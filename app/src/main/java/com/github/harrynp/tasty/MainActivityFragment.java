@@ -157,6 +157,7 @@ public class MainActivityFragment extends Fragment implements RecipeAdapter.Reci
         }
         detailIntent.putExtra(IngredientsFragment.INGREDIENTS_EXTRA, ingredients);
         detailIntent.putExtra(StepsFragment.STEPS_EXTRA, steps);
+        detailIntent.putExtra("RECIPE_NAME", recipe.getName());
         startActivity(detailIntent);
     }
 

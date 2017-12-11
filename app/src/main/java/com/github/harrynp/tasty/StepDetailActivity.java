@@ -14,12 +14,8 @@ import org.parceler.Parcels;
 public class StepDetailActivity extends AppCompatActivity {
 
     ActivityStepDetailBinding mBinding;
-//    private ArrayList<Step> steps;
-//    private int currentStepPosition;
     Step step;
     public static String STEP_EXTRA = "STEP_EXTRA";
-//    public static String STEPS_EXTRA = "STEPS_EXTRA";
-//    public static String CURRENT_STEP_POSITION = "CURRENT_STEP_POSITION";
     private StepDetailFragment fragment;
 
 
@@ -30,19 +26,11 @@ public class StepDetailActivity extends AppCompatActivity {
         setSupportActionBar(mBinding.stepDetailToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-//        steps = new ArrayList<>();
         if (getIntent() != null) {
             if (getIntent().hasExtra(STEP_EXTRA)){
                 step = Parcels.unwrap(getIntent().getParcelableExtra(STEP_EXTRA));
+                getSupportActionBar().setTitle(step.getShortDescription());
             }
-//            if (getIntent().hasExtra(STEP_EXTRA) && getIntent().hasExtra(CURRENT_STEP_POSITION)){
-//                for (Parcelable parcelable : getIntent().getParcelableArrayListExtra(STEPS_EXTRA)) {
-//                    Step step = Parcels.unwrap(parcelable);
-//                    steps.add(step);
-//                }
-//                currentStepPosition = getIntent().getIntExtra(CURRENT_STEP_POSITION, 0);
-//            }
         }
         if (savedInstanceState != null) {
             fragment = (StepDetailFragment) getSupportFragmentManager().getFragment(savedInstanceState, "stepDetailFragment");

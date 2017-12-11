@@ -35,6 +35,7 @@ public class DetailFragment extends Fragment {
     private List<Parcelable> mIngredientsList;
     private List<Parcelable> mStepsList;
     private long recipeId;
+    private String recipeName;
     private static final String INGREDIENTS_STATE = "INGREDIENTS_STATE";
     private static final String STEPS_STATE = "STEPS_STATE";
 
@@ -69,7 +70,7 @@ public class DetailFragment extends Fragment {
      * @return A new instance of fragment DetailFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DetailFragment newInstance(List<Parcelable> ingredientsList, List<Parcelable> stepsList, long recipeId) {
+    public static DetailFragment newInstance(List<Parcelable> ingredientsList, List<Parcelable> stepsList, long recipeId, String recipeName) {
         DetailFragment fragment = new DetailFragment();
         Bundle args = new Bundle();
         if (ingredientsList != null){
@@ -79,6 +80,7 @@ public class DetailFragment extends Fragment {
             args.putParcelableArrayList(StepsFragment.STEPS_EXTRA, (ArrayList<? extends Parcelable>) stepsList);
         }
         args.putLong("RECIPE_ID", recipeId);
+        args.putString("RECIPE_NAME", recipeName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -86,8 +88,6 @@ public class DetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override
@@ -115,6 +115,10 @@ public class DetailFragment extends Fragment {
             if (savedInstanceState.containsKey(STEPS_STATE)){
                 mStepsList = savedInstanceState.getParcelableArrayList(STEPS_STATE);
             }
+            if (savedInstanceState.containsKey("RECIPE_NAME")){
+                recipeName = savedInstanceState.getString("RECIPE_NAME");
+            }
+            recipeId = savedInstanceState.getLong("RECIPE_ID");
         } else {
             Bundle args = getArguments();
             if (args != null) {
@@ -124,6 +128,10 @@ public class DetailFragment extends Fragment {
                     }
                     if (args.containsKey(StepsFragment.STEPS_EXTRA)) {
                         mStepsList = args.getParcelableArrayList(StepsFragment.STEPS_EXTRA);
+                    }
+                    if (args.containsKey("RECIPE_NAME")){
+                        recipeName = args.getString("RECIPE_NAME");
+                        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(recipeName);
                     }
                 }
             }
@@ -139,6 +147,10 @@ public class DetailFragment extends Fragment {
         if (mStepsList != null){
             outState.putParcelableArrayList(STEPS_STATE, (ArrayList<? extends Parcelable>) mStepsList);
         }
+        if (recipeName != null || !recipeName.isEmpty()){
+            outState.putString("RECIPE_NAME", recipeName);
+        }
+        outState.putLong("RECIPE_ID", recipeId);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

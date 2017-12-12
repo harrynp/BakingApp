@@ -59,7 +59,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
     public void onBindViewHolder(RecipeAdapterViewHolder holder, int position) {
         Recipe recipe = mRecipeList.get(position);
         if (recipe != null){
-            ArrayList<Step> steps = recipe.getSteps();
             holder.titleView.setText(recipe.getName());
             holder.servingsView.setText(Integer.toString(recipe.getServings()));
             if (recipe.getImage() != null && !recipe.getImage().isEmpty()){
@@ -72,6 +71,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .into(holder.thumbnailView);
             } else {
+                List<Step> steps = recipe.getSteps();
                 Glide.with(mContext)
                         .load(steps.get(steps.size() - 1).getVideoURL())
                         .apply(new RequestOptions()

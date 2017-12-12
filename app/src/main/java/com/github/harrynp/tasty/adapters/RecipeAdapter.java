@@ -62,14 +62,25 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
             ArrayList<Step> steps = recipe.getSteps();
             holder.titleView.setText(recipe.getName());
             holder.servingsView.setText(Integer.toString(recipe.getServings()));
-            Glide.with(mContext)
-                    .load(steps.get(steps.size() -1).getVideoURL())
-                    .apply(new RequestOptions()
-                            .placeholder(R.drawable.placeholder_food)
-                            .fallback(R.drawable.placeholder_food)
-                            .centerCrop())
-                            .transition(DrawableTransitionOptions.withCrossFade())
-                            .into(holder.thumbnailView);
+            if (recipe.getImage() != null && !recipe.getImage().isEmpty()){
+                Glide.with(mContext)
+                        .load(recipe.getImage())
+                        .apply(new RequestOptions()
+                                .placeholder(R.drawable.placeholder_food)
+                                .fallback(R.drawable.placeholder_food)
+                                .centerCrop())
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(holder.thumbnailView);
+            } else {
+                Glide.with(mContext)
+                        .load(steps.get(steps.size() - 1).getVideoURL())
+                        .apply(new RequestOptions()
+                                .placeholder(R.drawable.placeholder_food)
+                                .fallback(R.drawable.placeholder_food)
+                                .centerCrop())
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(holder.thumbnailView);
+            }
         }
     }
 
